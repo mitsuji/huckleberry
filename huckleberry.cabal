@@ -3,8 +3,8 @@
 
 name:                huckleberry
 version:             0.9.0.0
-synopsis:            haskell EDSL Huckleberry
-description:         IchigoJam BASIC on haskell
+synopsis:            IchigoJam BASIC expressed in Haskell.
+description:         The EDSL Provides bridge between IchigoJam BASIC and Haskell.
 license:             BSD3
 license-file:        LICENSE
 author:              Takamasa Mitsuji
@@ -22,3 +22,19 @@ library
   build-depends:       base >=4.7 && <4.8, bytestring >=0.10 && <0.11, serialport >=0.4 && <0.5, mtl >=2.1
   -- hs-source-dirs:      
   default-language:    Haskell2010
+
+
+source-repository head
+  type:     git
+  location: https://github.com/mitsuji/huckleberry.git
+
+
+test-suite test
+  hs-source-dirs: test
+  main-is: test_Huckleberry_V10101.hs
+  type: exitcode-stdio-1.0
+  build-depends:       base,
+                       HUnit >= 1.2.0.0,
+                       huckleberry
+  default-language:    Haskell2010
+
