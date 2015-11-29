@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                huckleberry
-version:             0.9.0.0
+version:             0.9.0.1
 synopsis:            IchigoJam BASIC expressed in Haskell.
 description:         The EDSL Provides bridge between IchigoJam BASIC and Haskell.
 license:             BSD3
