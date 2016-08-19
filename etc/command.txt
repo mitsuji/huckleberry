@@ -1,8 +1,0 @@
-cabal haddock --hyperlink-source --html-location='http://hackage.haskell.org/package/huckleberry/docs' --contents-location='http://hackage.haskell.org/package/huckleberry'
-
-cp -R ./dist/doc/html/huckleberry/ huckleberry-0.9.0.0-docs
-
-tar -cvzf huckleberry-0.9.0.0-docs.tar.gz huckleberry-0.9.0.0-docs --format=ustar
-
-curl -X PUT -H 'Content-Type: application/x-tar' -H 'Content-Encoding: gzip' --data-binary '@huckleberry-0.9.0.0-docs.tar.gz' 'https://$USERNAME:$PASSWORD@hackage.haskell.org/package/huckleberry-0.9.0.0/docs'
-
