@@ -7,8 +7,8 @@ import Control.Monad(forM_)
 import Control.Concurrent(threadDelay)
 
 import System.PIO(hexToNum)
-import System.PIO.Linux(fdOpen,oRdWr,fdClose,fdGetBuf,fdPutBuf)
-import System.PIO.Linux.I2C(setSlave)
+import System.PIO.Linux(fdOpen,IOMode(ReadWriteMode),fdClose,fdGetBuf,fdPutBuf)
+import System.PIO.Linux.I2C.Raw(setSlave)
 
 
 {--
@@ -29,13 +29,11 @@ hex :: String -> Word8
 hex = hexToNum
 
 
-test1 = do
-  let path = "/dev/i2c-6"
-  let slave = hex "1E"
+demo1 :: IO ()
+demo1 = do
   
-  fd <- fdOpen path oRdWr
-
-  setSlave fd slave
+  fd <- fdOpen "/dev/i2c-6" ReadWriteMode
+  setSlave fd $ hex "1E"
 
   withArrayLen [hex "00", hex "70"] $ \len p -> fdPutBuf fd p len
   withArrayLen [hex "01", hex "A0"] $ \len p -> fdPutBuf fd p len
@@ -52,13 +50,11 @@ test1 = do
   fdClose fd
 
 
-test2 = do
-  let path = "/dev/i2c-6"
-  let slave = hex "1E"
+demo2 :: IO ()
+demo2 = do
   
-  fd <- fdOpen path oRdWr
-
-  setSlave fd slave
+  fd <- fdOpen "/dev/i2c-6" ReadWriteMode
+  setSlave fd $ hex "1E"
 
   withArrayLen [hex "00", hex "70"] $ \len p -> fdPutBuf fd p len
   withArrayLen [hex "01", hex "A0"] $ \len p -> fdPutBuf fd p len

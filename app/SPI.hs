@@ -5,8 +5,8 @@ import Control.Monad(forM_)
 import Control.Concurrent(threadDelay)
 
 import System.PIO(binToNum)
-import System.PIO.Linux(fdOpen,oRdWr,fdClose)
-import System.PIO.Linux.SPI
+import System.PIO.Linux(fdOpen,IOMode(ReadWriteMode),fdClose)
+import System.PIO.Linux.SPI.Raw
 
 
 {--
@@ -29,31 +29,88 @@ bin :: String -> Word8
 bin = binToNum
 
 
-test = do
-  let path = "/dev/spidev5.1"
-  let mode = mode0
+demoSetting :: IO ()
+demoSetting = do
+
+  fd <- fdOpen "/dev/spidev5.1" ReadWriteMode
+  
+  print . fromEnum =<< getMode fd
+  
+  setMode fd Mode1
+  print . fromEnum =<< getMode fd
+  
+  setMode fd Mode2
+  print . fromEnum =<< getMode fd
+  
+  setMode fd Mode3
+  print . fromEnum =<< getMode fd
+  
+  setMode fd Mode0
+  print . fromEnum =<< getMode fd
+  
+  
+  print =<< getLsbFirst fd
+  
+--  setLsbFirst fd True
+--  print =<< getLsbFirst fd
+  
+  setLsbFirst fd False
+  print =<< getLsbFirst fd
+
+  
+  print =<< getBitsPerWord fd
+  
+  setBitsPerWord fd 7
+  print =<< getBitsPerWord fd
+  
+  setBitsPerWord fd 8
+  print =<< getBitsPerWord fd
+  
+  setBitsPerWord fd 10
+  print =<< getBitsPerWord fd
+
+  setBitsPerWord fd 20
+  print =<< getBitsPerWord fd
+
+
+  print =<< getMaxSpeedHz fd
+  
+  setMaxSpeedHz fd 7000
+  print =<< getMaxSpeedHz fd
+  
+  setMaxSpeedHz fd 8000
+  print =<< getMaxSpeedHz fd
+  
+  setMaxSpeedHz fd 9100
+  print =<< getMaxSpeedHz fd
+  
+  setMaxSpeedHz fd 1000000
+  print =<< getMaxSpeedHz fd
+  
+
+  fdClose fd
+
+
+
+demoTransferTxRx1 :: IO ()
+demoTransferTxRx1 = do
+  
   let bits = 8
   let speed = 1000000
   let ch = 0
   
-  fd <- fdOpen path oRdWr
+  fd <- fdOpen "/dev/spidev5.1" ReadWriteMode
   
-  setWrMode fd mode
-  setRdMode fd mode
-  
-  setWrBitsPerWord fd bits
-  setRdBitsPerWord fd bits
-  
-  setWrMaxSpeedHz fd speed
-  setRdMaxSpeedHz fd speed
-
+  setMode fd Mode0
+  setBitsPerWord fd bits
+  setMaxSpeedHz fd speed
 
   forM_ [0..99] $ \_ -> do
     
     let dt0 = bin "1100000" .|. (ch `shiftL` 4)
     let dt1 = 0
     dt0':dt1':_ <- withArrayLen [dt0,dt1] $
-      \len p -> transferMessage1 fd p len speed bits >> peekArray len p
+      \len p -> transferTxRx1 fd p len bits speed 0 False >> peekArray len p
       
     let v = ((fromIntegral (dt0' .&. bin "11") :: Word16) `shiftL` 8) .|. (fromIntegral dt1' :: Word16)
     print v
@@ -68,3 +125,4 @@ dt0'' ch = bin "00000110" .|. ( (bin "0100" .&. ch) `shiftR` 2)
 dt1'' ch = bin "00000000" .|. ( (bin "0011" .&. ch) `shiftL` 6)
 
     
+
