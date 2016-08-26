@@ -1,5 +1,5 @@
 name:                huckleberry
-version:             0.9.1.1
+version:             0.10.0.0
 synopsis:            Haskell IOT on Intel Edison and other Linux computers.
 description:         Please see README.md
 homepage:            https://github.com/mitsuji/huckleberry#readme
