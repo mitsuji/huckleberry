@@ -1,5 +1,5 @@
 name:                huckleberry
-version:             0.10.0.0
+version:             0.10.0.1
 synopsis:            Haskell IOT on Intel Edison and other Linux computers.
 description:         Please see README.md
 homepage:            https://github.com/mitsuji/huckleberry#readme
@@ -12,9 +12,21 @@ category:            System
 build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:
+  README.md
   include/hs_fcntl.h
   include/hs_i2c.h
   include/hs_spi.h
+  include/hs_spi.h
+  sh/setup_in.sh
+  sh/setup_out.sh
+  sh/setup_pwm.sh
+  sh/setup_i2c.sh
+  sh/setup_spi.sh
+  demo/GpioIn.hs
+  demo/GpioOut.hs
+  demo/PWM.hs
+  demo/I2C.hs
+  demo/SPI.hs
 
 library
   hs-source-dirs:      src
